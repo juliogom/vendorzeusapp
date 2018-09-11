@@ -1,0 +1,207 @@
+<form name="editForm" role="form" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myUserLabel">
+            Create or edit a Reference</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="clear()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group">
+            <label>ID</label>
+            <input type="text" disabled class="form-control" name="id">
+        </div>
+
+        <div class="form-group">
+            <label class="form-control-label">Referencia</label>
+            <input type="text" class="form-control" name="reference" required #reference="ngModel" [(ngModel)]="product.reference" maxlength="50">
+
+            <div *ngIf="reference.dirty && reference.invalid ">
+                <small class="form-text text-danger" *ngIf="reference.errors.required">
+                    debes ingresar la referencia
+                </small>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Costo</label>
+                <input type="number" class="form-control" pattern="[1-9][0-9]{0,}" name="costo" required #costoInput="ngModel" [(ngModel)]="product.cost" maxlength="50">
+
+                <div *ngIf="costoInput.dirty && costoInput.invalid">
+                    <small class="form-text text-danger" *ngIf="costoInput.errors.maxlength">
+                        Verifica que el costo no contenga mas de 50 numeros y que sea mayor que 0
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Porcentaje ganancia</label>
+                <input type="number" class="form-control" name="porcentajeInput" required #porcentajeInput="ngModel" [(ngModel)]="product.percentage"
+                    maxlength="50">
+
+                <div *ngIf="porcentajeInput.dirty && porcentajeInput.invalid">
+                    <small class="form-text text-danger" *ngIf="porcentajeInput.errors.maxlength">
+                        Verifica que el porcentaje no contenga tantos numeros
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Precio Venta total</label>
+                <input type="number" class="form-control" name="totalInput" disabled #totalInput="ngModel" [(ngModel)]="product.sellTotal"
+                    maxlength="50" placeholder="{{((product.cost * product.percentage)/100)+ product.cost}}">
+
+                <div *ngIf="totalInput.dirty && totalInput.invalid">
+                    <small class="form-text text-danger" *ngIf="totalInput.errors.maxlength">
+                        error precio venta total
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <h3>Nuevos atributos</h3>
+
+        <div class="container" style="border-style: solid;border-width: 0.5px;padding:10px;">
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="form-control-label">Selecciona Talla</label>
+                </div>
+
+                <div class="form-group col-md-3">
+
+                    <select class="selectpicker" [(ngModel)]="selectedsize" name="sizeName" #size (ngModelChange)="validateColorAtributes($event)">
+                        <option *ngFor="let size of sizes" [ngValue]="size">{{size.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-link">Add Talla</button>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="form-control-label">Selecciona Color</label>
+                </div>
+
+                <div class="form-group col-md-3">
+
+                    <select class="selectpicker" [(ngModel)]="selectedColor" name="colorName" #color (ngModelChange)="validateColorAtributes($event)">
+                        <option *ngFor="let color of colors" [ngValue]="color">{{color.name}}</option>
+                    </select>
+
+                    <div *ngIf="repeatvalue">
+                        <small class="form-text text-danger">
+                            esta combinacion ya se encuentra, eliminala de la tabla o escoge otra combinacion
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-link">Add color</button>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="form-control-label">cantidad</label>
+                </div>
+
+                <div class="form-group col-md-3">
+
+                    <input type="number" class="form-control" name="cantidadInput"   pattern="[1-9][0-9]{0,}" #cantidadInput="ngModel" [(ngModel)]="quantity" maxlength="50">
+
+                    <div *ngIf="cantidadInput.dirty && cantidadInput.invalid">
+                        <small class="form-text text-danger" *ngIf="cantidadInput.errors.maxlength">
+                            error cantidad de productos
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-primary" (click)="addAtribute()">
+                        <i class="fas fa-plus"></i>&nbsp;
+                        <span>ADD</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <h3>Atributos anadidos</h3>
+        <div class="container" style="border-style: solid;border-width: 0.5px;padding:10px;">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Talla</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Cantidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-template ngFor let-size [ngForOf]="sizes_colors" let-ruleIndex="index">
+                        <ng-template ngFor let-color [ngForOf]="size.colors" let-clauseIndex="index">
+                            <tr>
+                                <td>{{size.name}}</td>
+                                <td>{{color.name}}</td>
+                                <td>{{size.quantity}}</td>
+                                <button type="button" class="btn btn-danger" (click)="deleteAtribute(size,color)">Delete</button>
+
+                            </tr>
+                        </ng-template>
+                    </ng-template>
+
+                </tbody>
+            </table>
+
+        </div>
+
+
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Total en cantidad (con stock)</label>
+                <input type="number" class="form-control" name="cantTotal" disabled #cantTotal="ngModel" [(ngModel)]="product.total" maxlength="50">
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Total en costo (con stock)</label>
+                <input type="number" class="form-control" name="totCost" disabled #totCost="ngModel" [(ngModel)]="totcosts"
+                    maxlength="50" >
+
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="form-control-label">Total en venta (con stock)</label>
+                <input type="number" class="form-control" name="totsell" disabled #totsell="ngModel" maxlength="50" [(ngModel)]="totSells"
+                    >
+                
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;
+            <span>Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving || sizes_colors.length < 1" class="btn btn-primary" (click)="save()">
+            <span class="fa fa-floppy-o"></span>&nbsp;
+            <span>Save</span>
+        </button>
+    </div>
+
+</form>

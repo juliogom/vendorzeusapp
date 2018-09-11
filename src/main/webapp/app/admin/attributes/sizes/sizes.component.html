@@ -1,0 +1,61 @@
+<div>
+    <h2>
+        <span>Tallas</span>
+        <button class="btn btn-primary float-right jh-create-entity" [routerLink]="['/', { outlets: { popup: ['size-management-new'] } }]">
+            <span class="fa fa-plus"></span> <span>Nueva talla</span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <div class="table-responsive" *ngIf="sizes">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse">
+                <th jhiSortBy="id"><span>ID</span> <span class="fa fa-sort"></span></th>
+                <th jhiSortBy="name"><span>Nombre</span> <span class="fa fa-sort"></span></th>
+                <th jhiSortBy="valor"><span>valor</span> <span class="fa fa-sort"></span></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody *ngIf ="sizes">
+            <tr *ngFor="let size of sizes; trackBy: trackIdentity">
+                <td><a [routerLink]="['../user-management', size.id]">{{size.id}}</a></td>
+                <td>{{size.name}}</td>
+                <td>{{size.value}}</td>
+                
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['../user-management', size.id]"
+                                class="btn btn-info btn-sm">
+                            <span class="fa fa-eye"></span>
+                            <span class="d-none d-md-inline">Ver</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'user-management/'+ size.id + '/edit'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-primary btn-sm">
+                            <span class="fa fa-pencil"></span>
+                            <span class="d-none d-md-inline">Editar</span>
+                        </button>
+                        <button (click)="delete()"
+                                class="btn btn-danger btn-sm">
+                            <span class="fa fa-remove"></span>
+                            <span class="d-none d-md-inline">Eliminar</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div *ngIf="users">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="references">
+    <h1 class="display-4 text-center">Zeus Consola de Administración</h1>
+    <div class="container">
+        <h2>
+            <span>Atributos</span>
+            <button class="btn btn-primary float-right jh-create-entity" disabled [routerLink]="['/', { outlets: { popup: ['reference-management-new'] } }]">
+                <span class="fa fa-plus"></span>
+                <span>Crear nuevo atributo</span>
+            </button>
+        </h2>
+        <jhi-alert></jhi-alert>
+        <div class="container">
+            <div class="row">
+
+                <div class="card col-md-6">
+                    <div class="card-body">
+                        <h4 class="card-title">TALLAS</h4>
+                        <p class="card-text">Crea, Elimina o Edita tallas</p>
+                        <a [routerLink]="['../attributes','sizes']" class="btn btn-primary">TALLAS</a>
+                    </div>
+                </div>
+
+                <div class="card col-md-6">
+                    <div class="card-body">
+                        <h4 class="card-title">COLORES</h4>
+                        <p class="card-text">Crea, Elimina o Edita tallas</p>
+                        <a [routerLink]="['../atributes', 'colors']" class="btn btn-primary">COLORES</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

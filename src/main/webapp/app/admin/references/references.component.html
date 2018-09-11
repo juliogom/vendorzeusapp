@@ -1,0 +1,33 @@
+<div class="references">
+    <h1 class="display-4 text-center">Zeus Consola de Administración</h1>
+    <div class="container">
+        <h2>
+            <span>Referencias</span>
+            <button class="btn btn-primary float-right jh-create-entity" [routerLink]="['/', { outlets: { popup: ['reference-management-new'] } }]">
+                <span class="fa fa-plus"></span>
+                <span>Crear nueva referencia</span>
+            </button>
+        </h2>
+        <jhi-alert></jhi-alert>
+        <div class="container">
+
+            <div class="card" *ngFor="let product of products ">
+
+                <div class="card-header">
+                    <p class="font-weight-bold">Referencia: {{product.reference}}</p>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">
+                        <b>{{product.total}}</b> Colores &nbsp;&nbsp;
+                        <b>{{product.total}}</b> Productos &nbsp;&nbsp;
+                        <a href="#">Ver detalles</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
